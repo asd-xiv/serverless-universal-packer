@@ -1,0 +1,28 @@
+{
+  "branches": [{ "name": "main" }],
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits"
+      }
+    ],
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/npm",
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md",
+        "changelogTitle": "# A log of changes"
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": ["package.json", "package-lock.json"],
+        "message": "chore(release): ${nextRelease.gitTag} [skip ci] \n\n${nextRelease.notes}"
+      }
+    ],
+    "@semantic-release/github"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "include": ["lib", "bin"],
+  "exclude": ["**/node_modules"],
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "esnext",
+    "allowJs": true,
+    "checkJs": true,
+    "strict": true,
+		"noImplicitReturns": true,
+		"noImplicitOverride": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUncheckedIndexedAccess": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"forceConsistentCasingInFileNames": true,
+		"skipLibCheck": true,
+    "resolveJsonModule": false,
+		"allowSyntheticDefaultImports": true,
+    "incremental": true
+  }
+}

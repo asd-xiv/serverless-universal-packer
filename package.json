@@ -1,0 +1,86 @@
+{
+  "name": "tpl-ts-jsdoc",
+  "version": "0.0.1",
+  "description": "",
+  "homepage": "https://github.com/andreidmt/tpl-ts-jsdoc#readme",
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andreidmt/tpl-ts-jsdoc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/andreidmt/tpl-ts-jsdoc/issues"
+  },
+  "keywords": [
+    "template",
+    "starter",
+    "jsdoc",
+    "javascript",
+    "typescript",
+    "eslint",
+    "prettier"
+  ],
+  "author": {
+    "name": "Andrei Dumitrescu",
+    "url": "https://github.com/andreidmt"
+  },
+  "sideEffects": false,
+  "type": "module",
+  "main": "lib/index.js",
+  "files": [
+    "bin",
+    "lib",
+    "docs"
+  ],
+  "scripts": {
+    "----UTIL": "",
+    "prepare": "git config core.hooksPath .githooks",
+    "setup": "npm ci --cache .npm --prefer-offline --no-audit",
+    "update": "ncu --interactive",
+    "postupdate": "npm audit fix",
+    "format": "npm run lint.js -- --fix",
+    "----TEST": "",
+    "test": "tape 'lib/**/*.test.js' | tap-diff",
+    "test.coverage": "c8 npm run test",
+    "test.coverage-submit": "c8 --reporter=text-lcov npm run test | coveralls",
+    "typecheck": "tsc --noEmit",
+    "----LINT": "",
+    "lint": "npm run lint.js && npm run lint.md",
+    "lint.js": "eslint .",
+    "lint.md": "markdownlint '*.md' 'src/**/*.md'",
+    "----BUILD": "",
+    "release": "semantic-release"
+  },
+  "lint-staged": {
+    "*.js": "eslint --quiet",
+    "*.json": "prettier",
+    "*.md": "markdownlint",
+    ".circleci/config.yml": "circleci config validate"
+  },
+  "dependencies": {
+    "debug": "^4.3.4",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "@asd14/eslint-config": "^10.2.0",
+    "@commitlint/cli": "^17.6.1",
+    "@commitlint/config-conventional": "^17.6.1",
+    "@semantic-release/git": "^10.0.1",
+    "@types/node": "^18.16.3",
+    "@types/tape": "^4.13.4",
+    "c8": "^7.13.0",
+    "coveralls": "^3.1.1",
+    "eslint": "^8.39.0",
+    "lint-staged": "^13.2.2",
+    "markdownlint-cli": "^0.34.0",
+    "npm-check-updates": "^16.10.9",
+    "prettier": "^2.8.8",
+    "semantic-release": "^21.0.2",
+    "tap-diff": "^0.1.1",
+    "tape": "^5.6.3",
+    "typescript": "^5.0.4"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
