@@ -106,7 +106,7 @@ jobs:
   #  - GITHUB_TOKEN: needs access to create a tag, release and commit version
   #  changes to package.json and package-lock.json
   #  - NPM_TOKEN: needs access to publish to npm
-  release-npm:
+  publish-npm:
     executor: node-lts
     steps:
       - checkout
@@ -115,7 +115,7 @@ jobs:
           name:
             "[semantic-release] Update version, generate release, publish npm
             package"
-          command: npm run release
+          command: npm run publish-npm
 
   # Required env vars:
   # - COVERALLS_REPO_TOKEN: access token to submit data to coveralls.io
@@ -148,12 +148,12 @@ workflows:
           requires: [setup]
       - lint:
           requires: [setup]
-      - release-npm:
+      - publish-npm:
           requires: [test, typecheck, lint]
           context: ["GitHub Auth", "NPM Auth"]
       - submit-coverage:
-          requires: [release-npm]
-          context: ["Coveralls - tsd-lite-cli"]
+          requires: [publish-npm]
+          context: ["Coveralls - serverless-universal-packer"]
 
   test-pr:
     jobs:
