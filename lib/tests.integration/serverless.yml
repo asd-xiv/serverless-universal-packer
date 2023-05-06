@@ -1,0 +1,14 @@
+service: universal-packer-integration-test
+
+provider:
+  name: aws
+
+plugins:
+  - ../index.js
+
+custom:
+  universalPacker:
+    script:
+      - mkdir -p ./.serverless
+      - echo "hello universal packer" > ./.serverless/lore-ipsum
+      - realpath ".serverless/lore-ipsum"
