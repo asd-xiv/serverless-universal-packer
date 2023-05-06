@@ -5,6 +5,8 @@
     // Delegate to TypeScript's noPropertyAccessFromIndexSignature
     "dot-notation": "off",
 
+    "jsdoc/require-example": "off",
+
     // Disable relative imports since there's no build step and resolver
     "no-relative-import-paths/no-relative-import-paths": "off",
 
@@ -13,7 +15,7 @@
     "import/no-extraneous-dependencies": [
       "error",
       {
-        "devDependencies": ["**/*.test-d.ts", "**/*.test.js"]
+        "devDependencies": ["lib/tests.*/**/*.js"]
       }
     ]
   },
