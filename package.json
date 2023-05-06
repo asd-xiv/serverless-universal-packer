@@ -39,7 +39,7 @@
     "format": "npm run lint.js -- --fix",
     "----CODE-ANALYSIS": "",
     "test.unit": "tape 'lib/tests.unit/**/*.js' | tap-diff",
-    "test.integration": "cd lib/tests.integration && sls package",
+    "test.integration": "cd lib/tests.integration && sls package --verbose",
     "test": "npm run test.unit && npm run test.integration",
     "test.coverage": "c8 npm run test",
     "test.coverage-submit": "c8 --reporter=text-lcov npm run test | coveralls",

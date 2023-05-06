@@ -4,7 +4,7 @@
   "rules": {
     // Delegate to TypeScript's noPropertyAccessFromIndexSignature
     "dot-notation": "off",
-
+    "unicorn/no-array-for-each": "off",
     "jsdoc/require-example": "off",
 
     // Disable relative imports since there's no build step and resolver
