@@ -63,6 +63,7 @@
     "@asd14/eslint-config": "^10.2.0",
     "@commitlint/cli": "^17.6.3",
     "@commitlint/config-conventional": "^17.6.3",
+    "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@types/node": "^20.1.0",
     "@types/serverless": "^3.12.11",
