@@ -134,7 +134,7 @@ jobs:
 # cmd1 -p1 lorem | cmd2 -foo bar | ... | cmdN)
 
 workflows:
-  publish-npm:
+  publish-latest-npm:
     jobs:
       - detect-secrets:
           filters:
@@ -155,7 +155,7 @@ workflows:
           requires: [test, typecheck, lint]
           context: ["Coveralls - serverless-universal-packer"]
 
-  validate_pull-request:
+  validate-pull-request:
     jobs:
       - detect-secrets:
           filters:
