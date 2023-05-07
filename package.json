@@ -1,6 +1,6 @@
 {
   "name": "@asd14/serverless-universal-packer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A Serverless plugin for custom packaging using bash scripts",
   "homepage": "https://github.com/asd-xiv/serverless-universal-packer",
   "license": "BSD-3-Clause",
