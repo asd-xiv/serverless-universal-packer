@@ -11,6 +11,10 @@
   "bugs": {
     "url": "https://github.com/asd-xiv/serverless-universal-packer/issues"
   },
+  "author": {
+    "name": "Andrei Dumitrescu",
+    "url": "https://github.com/andreidmt"
+  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",
@@ -23,10 +27,6 @@
     "packer",
     "bash"
   ],
-  "author": {
-    "name": "Andrei Dumitrescu",
-    "url": "https://github.com/andreidmt"
-  },
   "sideEffects": false,
   "type": "module",
   "main": "lib/index.js",
@@ -87,6 +87,6 @@
     "typescript": "^5.0.4"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=16"
   }
 }
