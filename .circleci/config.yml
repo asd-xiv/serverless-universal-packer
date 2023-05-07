@@ -152,7 +152,7 @@ workflows:
           requires: [test, typecheck, lint]
           context: ["GitHub Auth", "NPM Auth"]
       - submit-coverage:
-          requires: [setup]
+          requires: [test, typecheck, lint]
           context: ["Coveralls - serverless-universal-packer"]
 
   validate_pull-request:
