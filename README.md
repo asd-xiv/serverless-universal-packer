@@ -4,6 +4,12 @@
 
 <center>
 ![logo](docs/logo.png)
+
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/asd-xiv/serverless-universal-packer/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/asd-xiv/serverless-universal-packer/tree/main)
+[![Coverage Status](https://coveralls.io/repos/github/asd-xiv/serverless-universal-packer/badge.svg?branch=main)](https://coveralls.io/github/asd-xiv/serverless-universal-packer?branch=main)
+![npm (scoped)](https://img.shields.io/npm/v/@asd14/serverless-universal-packer?label=npm%40latest)
+![semantic-release](https://img.shields.io/badge/semantic--release-conventionalcommits-green)
+
 </center>
 
 <!-- vim-markdown-toc GFM -->
