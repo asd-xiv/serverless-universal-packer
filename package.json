@@ -11,6 +11,11 @@
   "bugs": {
     "url": "https://github.com/asd-xiv/serverless-universal-packer/issues"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "tag": "latest"
+  },
   "keywords": [
     "serverless",
     "plugin",
