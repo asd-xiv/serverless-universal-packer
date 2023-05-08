@@ -25,8 +25,8 @@
 > Serverless plugin for custom packaging using bash scripts.
 
 - 🛠️ **Flexibility**: Don't rely on the existence of specialized plugins
-  interfacing bundler X. Easily pivot when a different, better builder comes
-  out.
+  interfacing bundler X. Easily pivot when a different and better suited for
+  your needs builder comes out.
 - 🔁 **Stay Updated**: Keep dependencies updated without waiting for plugin
   updates.
 - 🟩 **Low complexity**: Specialized plugins mostly just proxy to the
@@ -36,27 +36,36 @@
 
 <!-- vim-markdown-toc GFM -->
 
-- [Install](#install)
-- [Examples](#examples)
-- [Development](#development)
-- [Changelog](#changelog)
+- [📥 Install](#-install)
+- [📚 Examples](#-examples)
+  - [NPM `pack`](#npm-pack)
+  - [Typescript](#typescript)
+  - [SWC](#swc)
+- [💻 Development](#-development)
+- [📜 Changelog](#-changelog)
 
 <!-- vim-markdown-toc -->
 
-## Install
+## 📥 Install
 
 ```bash
 npm install --save-dev serverless-universal-packer
 ```
 
-## Examples
+## 📚 Examples
 
-## Development
+### NPM `pack`
+
+### Typescript
+
+### SWC
+
+## 💻 Development
 
 ```bash
 git clone git@github.com:asd-xiv/serverless-universal-packer.git asd14.serverless-universal-packer
 ```
 
-## Changelog
+## 📜 Changelog
 
 See the [releases section](https://github.com/asd-xiv/serverless-universal-packer/releases) for details.
