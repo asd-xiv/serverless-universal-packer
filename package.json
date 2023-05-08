@@ -54,7 +54,7 @@
     "test.coverage-submit": "c8 --reporter=text-lcov npm run test | coveralls",
     "lint": "npm run lint.js && npm run lint.md",
     "lint.js": "eslint .",
-    "lint.md": "markdownlint '*.md' 'src/**/*.md'",
+    "lint.md": "markdownlint '*.md' 'src/**/*.md' --ignore CHANGELOG.md",
     "typecheck": "tsc --pretty --noEmit",
     "----BUILD": "",
     "publish-npm": "semantic-release"
