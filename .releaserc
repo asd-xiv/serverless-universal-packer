@@ -9,7 +9,13 @@
     ],
     "@semantic-release/release-notes-generator",
     "@semantic-release/npm",
-    "@semantic-release/changelog",
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md",
+        "changelogTitle": "# Changelog"
+      }
+    ],
     [
       "@semantic-release/git",
       {
