@@ -61,10 +61,11 @@ findWorkspaceRoot() {
   local path=$1
 
   if [ "${path}" = "/" ]; then
+    echo "No workspace root found in the current directory tree" >&2
     return 1
   fi
 
-  if grep 'workspaces' < "$path/package.json" > /dev/null; then
+  if [ -f "$path/package.json" ] && grep --quiet 'workspaces' < "$path/package.json" > /dev/null; then
     echo "${path}"
     return 0
   fi
@@ -119,7 +120,11 @@ backupNodeModules() {
   local pkg_path="$1"
 
   if [ -d "node_modules" ]; then
+    echo "Backing up node_modules to:"
+    echo " - $pkg_path/node_modules-bak"
+
     cp -rf "$pkg_path/node_modules" "$pkg_path/node_modules-bak"
+    return 0
   fi
 }
 
@@ -178,7 +183,8 @@ else
 fi
 
 backupNodeModules "$PKG_PATH"
-tgz_path=$(pack "$ws_path" "$PKG_PATH" | tail -n 1)
+pack_output=$(pack "$ws_path" "$PKG_PATH" | tee /dev/tty)
+tgz_path=$(echo "$pack_output" | tail -n 1)
 restoreNodeModules "$PKG_PATH"
 
 echo "Created bundle file:"

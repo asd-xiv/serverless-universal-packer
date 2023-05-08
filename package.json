@@ -36,8 +36,8 @@
     "docs"
   ],
   "bin": {
-    "convert-to-aws-zip": "./bin/convert-to-aws-zip",
-    "workspace-pack": "./bin/workspace-pack"
+    "sls-up_convert-to-aws-zip": "./bin/convert-to-aws-zip",
+    "sls-up_workspace-pack": "./bin/workspace-pack"
   },
   "scripts": {
     "----UTIL": "",
