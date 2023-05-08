@@ -2,10 +2,6 @@
 
 set -e
 
-# Author: Andrei Dumitrescu <andrei.dumitrescu@pm.me>
-# Date: 8th of May 2023
-# License: BSD 3-Clause
-
 display_help() {
   cat << EOF
 Usage: $(basename "$0") [-h] [-d] source [destination]
@@ -16,13 +12,11 @@ the input archive).
 
 Options:
   [-h, --help]           Print this help guide
-  [-d, --delete-source]  Delete the source .tgz file after the conversion is
-                         complete
 
 Arguments:
   source                 Source .tgz file (required)
   [destination]          Destination directory for the resulting .zip file
-                         (optional, defaults to the current directory)
+                         (optional, defaults to .serverless)
 
 Dependencies:
   tar
@@ -37,9 +31,6 @@ parse_arguments() {
       -h|--help)
         display_help
         exit 0
-      ;;
-      -d|--delete-source)
-        SHOULD_DELETE_SOURCE=true
       ;;
 
       # Standalone "--" terminates argument processing
@@ -58,19 +49,19 @@ parse_arguments() {
   done
 
   TGZ_PATH="$1"
-  DEST_DIR="${2:-.}"
+  DEST_DIR="${2:-.serverless}"
 }
 
 validate_input() {
-  if [ ! -f "$TGZ_FILE" ]; then
-    echo "Source argument, \"$TGZ_FILE\", does not exist" >&2
+  if [ ! -f "$TGZ_PATH" ]; then
+    echo "Source argument, \"$TGZ_PATH\", does not exist" >&2
     exit 1
   fi
 
-  local tgz_file_type="$(file --brief "$TGZ_FILE")"
+  local tgz_file_type="$(file --brief "$TGZ_PATH")"
 
   if ! expr "$tgz_file_type" : "gzip compressed data*" >/dev/null; then
-    echo "Source argument, \"$TGZ_FILE\", is not a tgz archive" >&2
+    echo "Source argument, \"$TGZ_PATH\", is not a tgz archive" >&2
     exit 1
   fi
 
@@ -114,8 +105,5 @@ zip_path="$(realpath "$DEST_DIR/$zip_file")"
 extract_tgz "/tmp/unpacked-$TGZ_PATH"
 archive_zip "/tmp/unpacked-$TGZ_PATH/package" "$zip_path"
 
-if [ "$SHOULD_DELETE_SOURCE" = true ]; then
-  rm "$TGZ_PATH"
-fi
-
+rm "$TGZ_PATH"
 echo "$zip_path"
