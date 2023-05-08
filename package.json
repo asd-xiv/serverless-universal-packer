@@ -62,7 +62,7 @@
   "lint-staged": {
     "*.js": "eslint --quiet",
     "*.json": "prettier",
-    "*.md": "markdownlint",
+    "*.md": "markdownlint --ignore CHANGELOG.md",
     ".circleci/config.yml": "circleci config validate"
   },
   "peerDependencies": {

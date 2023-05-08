@@ -1,5 +1,6 @@
-# [1.2.0](https://github.com/asd-xiv/serverless-universal-packer/compare/v1.1.0...v1.2.0) (2023-05-08)
+# Changelog
 
+## [1.2.0](https://github.com/asd-xiv/serverless-universal-packer/compare/v1.1.0...v1.2.0) (2023-05-08)
 
 ### Features
 
