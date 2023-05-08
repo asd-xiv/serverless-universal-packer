@@ -2,10 +2,6 @@
 
 set -e
 
-# Author: Andrei Dumitrescu <andrei.dumitrescu@pm.me>
-# Date: 8th of May 2023
-# License: BSD 3-Clause
-
 display_help() {
   cat << EOF
 Usage: $(basename "$0")
@@ -87,7 +83,8 @@ syncPackageWithWorkspace() {
   # List of destination project's production dependencies paths inside the
   # parent workspace node_modules folder.
   ws_modules_paths=$(\
-    cd "$pkg_path" && npm ls --parseable --omit dev --depth 0 2>/dev/null \
+    cd "$pkg_path" \
+      && npm ls --parseable --omit dev --depth 0 --quiet --loglevel=error \
       | tail --lines +3
   )
 
@@ -159,7 +156,7 @@ pack() {
   fi
 
   echo "Running \"npm pack\""
-  npm pack 2>/dev/null
+  npm pack --quiet --loglevel=error
 }
 
 ##
@@ -183,8 +180,7 @@ else
 fi
 
 backupNodeModules "$PKG_PATH"
-pack_output=$(pack "$ws_path" "$PKG_PATH" | tee /dev/tty)
-tgz_path=$(echo "$pack_output" | tail -n 1)
+tgz_path=$(pack "$ws_path" "$PKG_PATH" | tail -n 1)
 restoreNodeModules "$PKG_PATH"
 
 echo "Created bundle file:"
