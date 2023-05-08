@@ -1,0 +1,185 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Author: Andrei Dumitrescu <andrei.dumitrescu@pm.me>
+# Date: 8th of May 2023
+# License: BSD 3-Clause
+
+display_help() {
+  cat << EOF
+Usage: $(basename "$0")
+
+Workaround for npm's "pack" command not working within the context of a
+workspace. https://github.com/npm/cli/issues/3466
+
+Options:
+  [-h, --help]  Print this help guide
+
+Dependencies:
+  npm
+EOF
+}
+
+parse_arguments() {
+  while :; do
+    case $1 in
+      -h|--help)
+        display_help
+        exit 0
+      ;;
+
+      # Standalone "--" terminates argument processing
+      --) shift; break ;;
+
+      # Argument not recognized
+      -?*)
+        echo "Error: Unknown argument $1" >&2
+        exit 1
+      ;;
+
+      # anything else, considered as non-option argument
+      *) break ;;
+    esac
+    shift
+  done
+
+  PKG_PATH="$(pwd)"
+}
+
+validate_input() {
+  if [ ! -f "package.json" ]; then
+    echo "Folder, \"$PKG_PATH\", does not contain a package.json file" >&2
+    exit 1
+  fi
+}
+
+
+# Find the root folder path of the workspace by traversing up the directory
+# tree until a package.json file with a "workspaces" property is found.
+findWorkspaceRoot() {
+  local path=$1
+
+  if [ "${path}" = "/" ]; then
+    return 1
+  fi
+
+  if grep 'workspaces' < "$path/package.json" > /dev/null; then
+    echo "${path}"
+    return 0
+  fi
+
+  findWorkspaceRoot "$(realpath "$path/..")"
+}
+
+# Copy all node_modules from the Workspace context to the current package
+# if they don't already exist in the destination directory.
+# Only apply to production dependencies.
+syncPackageWithWorkspace() {
+  workspace_path="$1"
+  pkg_path="$2"
+
+  echo "Syncing modules from:"
+  echo " - workspace: $workspace_path/node_modules"
+  echo " - project: $pkg_path/node_modules"
+
+  # List of destination project's production dependencies paths inside the
+  # parent workspace node_modules folder.
+  ws_modules_paths=$(\
+    cd "$pkg_path" && npm ls --parseable --omit dev --depth 0 2>/dev/null \
+      | tail --lines +3
+  )
+
+  if [ -z "$ws_modules_paths" ]; then
+    echo "No production dependencies found in the project" >&2
+    return 1
+  fi
+
+  echo "Found production dependencies:"
+
+  for module_path in $ws_modules_paths; do
+    echo " - $module_path"
+
+    # In order to correctly copy namespaced packages, we need to recreate the
+    # folder structure inside the destination node_modules folder.
+    # For example `ws/node_modules/@namespace/package` should be copied to
+    # `pkg/node_modules/@namespace/package`. If we just copy the contents of
+    # the folder, the package will be copied to `pkg/node_modules/package`.
+    local relative_path=$(echo "$module_path" \
+      | sed "s|$workspace_path/node_modules/||"
+    )
+    local destination="$pkg_path/node_modules/$relative_path"
+
+    mkdir -p "$destination"
+    cp --recursive --force "$module_path"/* "$destination"
+  done
+}
+
+backupNodeModules() {
+  local pkg_path="$1"
+
+  if [ -d "node_modules" ]; then
+    cp -rf "$pkg_path/node_modules" "$pkg_path/node_modules-bak"
+  fi
+}
+
+restoreNodeModules() {
+  local pkg_path="$1"
+
+  echo "Restoring node_modules to its original state:"
+
+  if [ -L "$pkg_path/node_modules" ]; then
+    echo " - removing node_modules symlink"
+    rm "$pkg_path/node_modules"
+    return 0
+  fi
+
+  if [ -d "$pkg_path/node_modules-bak" ]; then
+    echo " - restoring backed-up node_modules"
+    rm -rf "$pkg_path/node_modules"
+    mv "$pkg_path/node_modules-bak" "$pkg_path/node_modules"
+  fi
+}
+
+# Run "npm pack" in the workspace context by first symlinking or copying the
+# the workspace's node_modules folder to the current package's node_modules.
+pack() {
+  local ws_path="$1"
+  local pkg_path="$2"
+
+  if [ -d "node_modules" ]; then
+    syncPackageWithWorkspace "$ws_path" "$pkg_path"
+  else
+    ln -s "$ws_path/node_modules" "$pkg_path/node_modules"
+  fi
+
+  echo "Running \"npm pack\""
+  npm pack 2>/dev/null
+}
+
+##
+## Main
+##
+
+parse_arguments "$@"
+validate_input
+
+echo "Preparing modules for npm project in:"
+echo " - $PKG_PATH"
+
+ws_path=$(findWorkspaceRoot "$PKG_PATH")
+
+if [ -z "$ws_path" ]; then
+  echo "Could not find any package.json file with a \"workspaces\" property" >&2
+  exit 1
+else
+  echo "Found workspace root:"
+  echo " - $ws_path"
+fi
+
+backupNodeModules "$PKG_PATH"
+tgz_path=$(pack "$ws_path" "$PKG_PATH" | tail -n 1)
+restoreNodeModules "$PKG_PATH"
+
+echo "Created bundle file:"
+echo "$PKG_PATH/$tgz_path"

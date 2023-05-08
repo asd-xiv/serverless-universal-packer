@@ -22,9 +22,9 @@
   },
   "keywords": [
     "serverless",
-    "plugin",
-    "package",
-    "packer",
+    "serverless-plugin",
+    "serverless-offline",
+    "serverless-package",
     "bash"
   ],
   "sideEffects": false,
@@ -35,6 +35,10 @@
     "lib",
     "docs"
   ],
+  "bin": {
+    "convert-to-aws-zip": "./bin/convert-to-aws-zip",
+    "workspace-pack": "./bin/workspace-pack"
+  },
   "scripts": {
     "----UTIL": "",
     "prepare": "git config core.hooksPath .githooks",

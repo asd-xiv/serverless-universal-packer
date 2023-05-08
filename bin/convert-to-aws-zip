@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Author: Andrei Dumitrescu <andrei.dumitrescu@pm.me>
+# Date: 8th of May 2023
+# License: BSD 3-Clause
+
+display_help() {
+  cat << EOF
+Usage: $(basename "$0") [-h] [-d] source [destination]
+
+Converts the .tgz archive, output of "npm pack", into a zip archive matching
+the format expected by AWS Lambda (removes the extra "/package" folder from
+the input archive).
+
+Options:
+  [-h, --help]           Print this help guide
+  [-d, --delete-source]  Delete the source .tgz file after the conversion is
+                         complete
+
+Arguments:
+  source                 Source .tgz file (required)
+  [destination]          Destination directory for the resulting .zip file
+                         (optional, defaults to the current directory)
+
+Dependencies:
+  tar
+  zip
+  file
+EOF
+}
+
+parse_arguments() {
+  while :; do
+    case $1 in
+      -h|--help)
+        display_help
+        exit 0
+      ;;
+      -d|--delete-source)
+        SHOULD_DELETE_SOURCE=true
+      ;;
+
+      # Standalone "--" terminates argument processing
+      --) shift; break ;;
+
+      # Argument not recognized
+      -?*)
+        echo "Error: Unknown argument $1" >&2
+        exit 1
+      ;;
+
+      # anything else, considered as non-option argument
+      *) break ;;
+    esac
+    shift
+  done
+
+  TGZ_PATH="$1"
+  DEST_DIR="${2:-.}"
+}
+
+validate_input() {
+  if [ ! -f "$TGZ_FILE" ]; then
+    echo "Source argument, \"$TGZ_FILE\", does not exist" >&2
+    exit 1
+  fi
+
+  local tgz_file_type="$(file --brief "$TGZ_FILE")"
+
+  if ! expr "$tgz_file_type" : "gzip compressed data*" >/dev/null; then
+    echo "Source argument, \"$TGZ_FILE\", is not a tgz archive" >&2
+    exit 1
+  fi
+
+  if [ ! -d "$DEST_DIR" ]; then
+    echo "Destination directory argument, \"$DEST_DIR\", does not exist" >&2
+    exit 1
+  fi
+}
+
+extract_tgz() {
+  echo "Extracting .tgz file"
+  local dest_dir="$1"
+
+  if [ -d "$dest_dir" ]; then
+    rm -rf "$dest_dir"
+  fi
+
+  mkdir -p "$dest_dir"
+  tar -xzf "$TGZ_PATH" --directory "$dest_dir"
+}
+
+archive_zip() {
+  echo "Archiving .zip file"
+  local source_dir="$1"
+  local dest_file="$2"
+
+  cd "$source_dir"
+  zip --recurse-paths --quiet --symlinks "$dest_file" -- *
+}
+
+##
+## Main
+##
+
+parse_arguments "$@"
+validate_input
+
+zip_file=$(basename "${TGZ_PATH%.tgz}.zip")
+zip_path="$(realpath "$DEST_DIR/$zip_file")"
+
+extract_tgz "/tmp/unpacked-$TGZ_PATH"
+archive_zip "/tmp/unpacked-$TGZ_PATH/package" "$zip_path"
+
+if [ "$SHOULD_DELETE_SOURCE" = true ]; then
+  rm "$TGZ_PATH"
+fi
+
+echo "$zip_path"
