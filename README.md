@@ -1,7 +1,7 @@
 <!-- markdownlint-disable first-line-h1 line-length no-inline-html -->
 
 <h1 align="center">
-  📦 serverless-universal-packer
+  :package: serverless-universal-packer
 </h1>
 <p align="center">
   <a href="https://dl.circleci.com/status-badge/redirect/gh/asd-xiv/serverless-universal-packer/tree/main" target="_blank">
@@ -24,12 +24,13 @@
 > Serverless plugin for custom packaging using BASH scripts with little to no
 > dependencies.
 
-- 🛠️ **Flexibility**: Don't rely on the existence of specialized plugins
-  interfacing bundler X. Easily pivot when a better suited builder comes out.
-- 🟩 **Low complexity**: Specialized plugins mostly just proxy to the underlying
-  bundler. You can do that yourself in a few command lines.
-- 🔁 **Stay Updated**: Keep dependencies updated without waiting for plugin
-  updates.
+- :hammer_and_wrench: **Flexibility**: Don't rely on the existence of
+  specialized plugins interfacing bundler X. Easily pivot when a better suited
+  builder comes out.
+- :green_square: **Low complexity**: Specialized plugins mostly just proxy to
+  the underlying bundler. You can do that yourself in a few command lines.
+- :repeat: **Stay Updated**: Keep dependencies updated without waiting for
+  plugin updates.
 
 ## Table of contents
 
@@ -62,9 +63,9 @@ Currently running `npm pack` inside a workspace/monorepo package will not
 include dependencies hoisted to the root `node_modules` folder. This is a
 [:bug: known issue](https://github.com/npm/cli/issues/3466).
 
-To fix this, you can you can temporary use this script.
+To get around this limitation, temporary use this script.
 
-Internally it will copy missing dependencies from the root `node_modules` into
+Internally it copies missing dependencies from the root `node_modules` into
 child package `node_modules` and run `npm pack`. After the package is created,
 the child `node_modules` is restored to its initial state.
 
@@ -93,11 +94,11 @@ file in the root of your project.
 > This defines an array of package names that will be bundled when publishing
 > the package.
 
-[examples_npm_npm-pack]: https://docs.npmjs.com/cli/commands/npm-pack
+[examples_npm_npm-pack]: https://docs.npmjs.com/cli/v9/commands/npm-pack
 [examples_npm_files]:
-  https://docs.npmjs.com/cli/configuring-npm/package-json#files
+  https://docs.npmjs.com/cli/v9/configuring-npm/package-json#files
 [examples_npm_bundled-dependencies]:
-  https://docs.npmjs.com/cli/configuring-npm/package-json#bundledependencies
+  https://docs.npmjs.com/cli/v9/configuring-npm/package-json#bundledependencies
 
 ```json
 // package.json
