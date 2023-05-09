@@ -66,8 +66,8 @@ include dependencies hoisted to the root `node_modules` folder. This is a
 To get around this limitation, temporary use this script.
 
 Internally it copies missing dependencies from the root `node_modules` into
-child package `node_modules` and run `npm pack`. After the package is created,
-the child `node_modules` is restored to its initial state.
+child package `node_modules` and runs `npm pack`. After the package is created,
+the original child `node_modules` is restored.
 
 ```bash
 npx sls-up_workspace-pack
