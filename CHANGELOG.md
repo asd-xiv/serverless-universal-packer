@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.5.0](https://github.com/asd-xiv/serverless-universal-packer/compare/v1.4.0...v1.5.0) (2023-06-20)
+
+
+### Features
+
+* update dependencies ([aa17067](https://github.com/asd-xiv/serverless-universal-packer/commit/aa17067bc236aef87a3fdce30de055b561ab53e2))
+
 # [1.4.0](https://github.com/asd-xiv/serverless-universal-packer/compare/v1.3.0...v1.4.0) (2023-05-08)
 
 
