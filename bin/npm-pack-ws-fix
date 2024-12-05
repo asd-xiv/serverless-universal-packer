@@ -50,6 +50,10 @@ validate_input() {
   fi
 }
 
+# Print a message in bold text
+bold() {
+  echo -e "\033[1m$1\033[0m"
+}
 
 # Find the root folder path of the workspace by traversing up the directory
 # tree until a package.json file with a "workspaces" property is found.
@@ -75,7 +79,7 @@ syncPackageWithWorkspace() {
   workspace_path="$1"
   pkg_path="$2"
 
-  echo "Syncing modules from:"
+  bold "Syncing modules from:"
   echo " - workspace: $workspace_path/node_modules"
   echo " - project: $pkg_path/node_modules"
 
@@ -92,7 +96,8 @@ syncPackageWithWorkspace() {
     return 1
   fi
 
-  echo "Found production dependencies:"
+  bold "Found production dependencies:"
+  echo "$ws_modules_paths"
 
   for module_path in $ws_modules_paths; do
     echo " - $module_path"
@@ -100,8 +105,7 @@ syncPackageWithWorkspace() {
     # In order to correctly copy namespaced packages, we need to recreate the
     # folder structure inside the destination node_modules folder.
     # For example `ws/node_modules/@namespace/package` should be copied to
-    # `pkg/node_modules/@namespace/package`. If we just copy the contents of
-    # the folder, the package will be copied to `pkg/node_modules/package`.
+    # `pkg/node_modules/@namespace/package`.
     local relative_path=$(echo "$module_path" \
       | sed "s|$workspace_path/node_modules/||"
     )
@@ -116,7 +120,7 @@ backupNodeModules() {
   local pkg_path="$1"
 
   if [ -d "node_modules" ]; then
-    echo "Backing up node_modules to:"
+    bold "Backing up node_modules to:"
     echo " - $pkg_path/node_modules-bak"
 
     cp -rf "$pkg_path/node_modules" "$pkg_path/node_modules-bak"
@@ -127,7 +131,7 @@ backupNodeModules() {
 restoreNodeModules() {
   local pkg_path="$1"
 
-  echo "Restoring node_modules to its original state:"
+  bold "Restoring node_modules to its original state:"
 
   if [ -L "$pkg_path/node_modules" ]; then
     echo " - removing node_modules symlink"
@@ -154,7 +158,7 @@ pack() {
     ln -s "$ws_path/node_modules" "$pkg_path/node_modules"
   fi
 
-  echo "Running \"npm pack\""
+  bold "Running \"npm pack\""
   npm pack --quiet --loglevel=error
 }
 
@@ -165,7 +169,7 @@ pack() {
 parse_arguments "$@"
 validate_input
 
-echo "Preparing modules for npm project in:"
+bold "Preparing modules for npm project in:"
 echo " - $PKG_PATH"
 
 ws_path=$(findWorkspaceRoot "$PKG_PATH")
@@ -173,14 +177,15 @@ ws_path=$(findWorkspaceRoot "$PKG_PATH")
 if [ -z "$ws_path" ]; then
   echo "Could not find any package.json file with a \"workspaces\" property" >&2
   exit 1
-else
-  echo "Found workspace root:"
-  echo " - $ws_path"
 fi
 
+bold "Found workspace root:"
+echo " - $ws_path"
+
 backupNodeModules "$PKG_PATH"
-tgz_path=$(pack "$ws_path" "$PKG_PATH" | tail -n 1)
+pack_result=$(pack "$ws_path" "$PKG_PATH" | tee /dev/tty)
+tgz_path=$(echo "$pack_result" | tail -n 1)
 restoreNodeModules "$PKG_PATH"
 
-echo "Created bundle file:"
+bold "Bundle file created:"
 echo "$PKG_PATH/$tgz_path"

@@ -2,14 +2,14 @@
   "name": "@asd14/serverless-universal-packer",
   "version": "1.5.0",
   "description": "A Serverless plugin for custom packaging using bash scripts",
-  "homepage": "https://github.com/asd-xiv/serverless-universal-packer",
+  "homepage": "https://github.com/asd-xiv/serverless-shell-packer",
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/asd-xiv/serverless-universal-packer.git"
+    "url": "git+https://github.com/asd-xiv/serverless-shell-packer.git"
   },
   "bugs": {
-    "url": "https://github.com/asd-xiv/serverless-universal-packer/issues"
+    "url": "https://github.com/asd-xiv/serverless-shell-packer/issues"
   },
   "author": {
     "name": "Andrei Dumitrescu",
@@ -36,8 +36,8 @@
     "docs"
   ],
   "bin": {
-    "sls-up_convert-to-aws-zip": "./bin/convert-to-aws-zip",
-    "sls-up_workspace-pack": "./bin/workspace-pack"
+    "convert-to-aws-zip": "./bin/convert-to-aws-zip",
+    "npm-pack-ws-fix": "./bin/npm-pack-ws-fix"
   },
   "scripts": {
     "----UTIL": "",

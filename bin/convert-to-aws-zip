@@ -48,8 +48,15 @@ parse_arguments() {
     shift
   done
 
-  TGZ_PATH="$1"
-  DEST_DIR="${2:-.serverless}"
+  local pipe_data="$(cat -)"
+
+  if [ -n "$pipe_data" ]; then
+    TGZ_PATH="$pipe_data"
+    DEST_DIR="${1:-.serverless}"
+  else
+    TGZ_PATH="$1"
+    DEST_DIR="${2:-.serverless}"
+  fi
 }
 
 validate_input() {

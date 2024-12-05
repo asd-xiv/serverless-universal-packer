@@ -38,8 +38,8 @@
 
 - [:inbox_tray: Install](#inbox_tray-install)
 - [:wrench: Custom BASH scripts](#wrench-custom-bash-scripts)
-  - [`sls-up_workspace-pack`](#sls-up_workspace-pack)
-  - [`sls-up_convert-to-aws-zip`](#sls-up_convert-to-aws-zip)
+  - [`npm-pack-ws-fix`](#npm-pack-ws-fix)
+  - [`convert-to-aws-zip`](#convert-to-aws-zip)
 - [:books: Examples](#books-examples)
   - [:package: NPM](#package-npm)
   - [:large_blue_diamond: Typescript](#large_blue_diamond-typescript)
@@ -57,24 +57,33 @@ npm install --save-dev serverless-universal-packer
 
 ## :wrench: Custom BASH scripts
 
-### `sls-up_workspace-pack`
+### `npm-pack-ws-fix`
 
 Currently running `npm pack` inside a workspace/monorepo package will not
 include dependencies hoisted to the root `node_modules` folder. This is a
 [:bug: known issue](https://github.com/npm/cli/issues/3466).
 
-To get around this limitation, temporary use this script.
+This script is a temporary workaround until the issue is fixed. It's meant to be
+run inside a child package folder, and will create a `.tgz` file in the root
+folder.
 
 Internally it copies missing dependencies from the root `node_modules` into
 child package `node_modules` and runs `npm pack`. After the package is created,
 the original child `node_modules` is restored.
 
 ```bash
-npx sls-up_workspace-pack
-# /path/to/package.tgz
+cd packages/my-package
+npx npm-pack-ws-fix
 ```
 
-### `sls-up_convert-to-aws-zip`
+### `convert-to-aws-zip`
+
+AWS Lambda requires a `.zip` file containing the `package.json` and the
+`node_modules` folder.
+
+`npm-pack-ws-fix`, which internaly uses `npm pack`, creates a `.tgz` file with
+an extra folder, `package`, containing the package files. This script extracts
+the `.tgz` file and recreates the `.zip` without the extra folder.
 
 ## :books: Examples
 
@@ -89,7 +98,7 @@ file in the root of your project.
 > The optional files field is an array of file patterns that describes the
 > entries to be included when your package is installed as a dependency
 
-#### [`bundledDependencies`][examples_npm_bundled-dependencies] : `string[] | boolean`
+#### [`bundleDependencies`][examples_npm_bundled-dependencies] : `string[] | boolean`
 
 > This defines an array of package names that will be bundled when publishing
 > the package.
@@ -104,21 +113,20 @@ file in the root of your project.
 // package.json
 {
   "files": ["src"],
-  "bundledDependencies": true
+  "bundleDependencies": true
 }
 ```
 
 ```yaml
 # serverless.yml
 plugins:
-  - serverless-universal-packer
+  - serverless-shell-packer
 
 custom:
-  universalPacker:
+  shellPacker:
     script:
-      - tgz_path=$(npx sls-up_workspace-pack | tail -n 1)
-      - zip_path=$(npx sls-up_convert-to-aws-zip "$tgz_path" | tail -n 1)
-      - echo "$zip_path"
+      - tgz_path=$(npx npm-pack-ws-fix | tail -n 1)
+      - npx convert-to-aws-zip "$tgz_path" | tail -n 1
 ```
 
 ### :large_blue_diamond: Typescript
@@ -128,7 +136,7 @@ custom:
 ## :computer: Development
 
 ```bash
-git clone git@github.com:asd-xiv/serverless-universal-packer.git asd14.serverless-universal-packer
+git clone git@github.com:asd-xiv/serverless-universal-packer.git asd14.serverless-shell-packer
 ```
 
 ## :scroll: Changelog
